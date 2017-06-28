@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -26,7 +28,9 @@ public class TimelineActivity extends AppCompatActivity {
     TwitterClient client;
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
+
     RecyclerView rvTweets;
+    SwipeRefreshLayout swipeContainer;
 
     private final int REQUEST_CODE = 10;
 
@@ -37,8 +41,26 @@ public class TimelineActivity extends AppCompatActivity {
 
         client = TwitterApp.getRestClient();
 
-        // find the recycler view
+        // find the recycler view and swipe container view
         rvTweets = (RecyclerView) findViewById(R.id.rvTweet);
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                fetchTimelineAsync(0);
+            }
+        });
+
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         // initialize arraylist
         tweets = new ArrayList<>();
@@ -46,11 +68,53 @@ public class TimelineActivity extends AppCompatActivity {
         //construct the adapter from the arraylist
         tweetAdapter = new TweetAdapter(tweets);
 
-        // RecyclerVeiw setup (layout manager, use adapter)
+        // RecyclerView setup (layout manager, use adapter)
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(tweetAdapter);
 
         populateTimeline();
+    }
+
+    public void fetchTimelineAsync(int page) {
+        // Send the network request to fetch the updated data
+        client.getHomeTimeline(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                try {
+                    // clear old items before appending new ones
+                    tweetAdapter.clear();
+
+                    List<Tweet> new_tweets = new ArrayList<Tweet>();
+
+                    for (int i = 0; i < response.length(); i++) {
+                        new_tweets.add(Tweet.fromJSON(response.getJSONObject(i)));
+                    }
+
+                    // add new items to adapter
+                    tweetAdapter.addAll(new_tweets);
+
+                    // Now we call setRefreshing(false) to signal refresh has finished
+                    swipeContainer.setRefreshing(false);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                swipeContainer.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                swipeContainer.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                swipeContainer.setRefreshing(false);
+            }
+        });
     }
 
     @Override
