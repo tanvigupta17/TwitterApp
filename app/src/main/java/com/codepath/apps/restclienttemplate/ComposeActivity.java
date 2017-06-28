@@ -3,6 +3,8 @@ package com.codepath.apps.restclienttemplate;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +27,21 @@ public class ComposeActivity extends AppCompatActivity {
 
     TwitterClient client;
 
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            checkText();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +52,8 @@ public class ComposeActivity extends AppCompatActivity {
         // perform find view by id lookups
         etCompose = (EditText) findViewById(R.id.etCompose);
         btnTweet = (Button) findViewById(R.id.btnTweet);
+
+        etCompose.addTextChangedListener(textWatcher);
 
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +77,6 @@ public class ComposeActivity extends AppCompatActivity {
                         }
                     }
 
-                    // use this method since array response is expected
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                         Log.d("TwitterClient", response.toString());
@@ -82,5 +100,22 @@ public class ComposeActivity extends AppCompatActivity {
                 });
             }
         });
+
+        checkText();
+
+        //getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //getSupportActionBar().setLogo(R.drawable.ic_launcher_twitter_round);
+        //getSupportActionBar().setDisplayUseLogoEnabled(true);
+    }
+
+    private void checkText() {
+        String text = etCompose.getText().toString();
+
+        if (text.length() == 0 || text.length() > 140) {
+            btnTweet.setEnabled(false);
+        }
+        else {
+            btnTweet.setEnabled(true);
+        }
     }
 }

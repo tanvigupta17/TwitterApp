@@ -72,6 +72,10 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(tweetAdapter);
 
+        //getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //getSupportActionBar().setLogo(R.drawable.ic_launcher_twitter_round);
+        //getSupportActionBar().setDisplayUseLogoEnabled(true);
+
         populateTimeline();
     }
 
