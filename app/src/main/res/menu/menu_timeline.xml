@@ -8,4 +8,5 @@
         android:onClick="onComposeAction"
         android:title="Compose">
     </item>
+
 </menu>

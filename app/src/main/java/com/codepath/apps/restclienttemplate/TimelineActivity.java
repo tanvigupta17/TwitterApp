@@ -74,14 +74,9 @@ public class TimelineActivity extends AppCompatActivity {
         MyDividerItemDecoration dividerItemDecoration = new MyDividerItemDecoration(rvTweets.getContext());
         rvTweets.addItemDecoration(dividerItemDecoration);
 
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //getSupportActionBar().setLogo(R.drawable.ic_launcher_twitter_round);
-        //getSupportActionBar().setDisplayUseLogoEnabled(true);
-
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.drawable.ic_launcher_twitter);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setTitle("");
+        getSupportActionBar().setIcon(R.drawable.ic_launcher_twitter);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         populateTimeline();
     }
