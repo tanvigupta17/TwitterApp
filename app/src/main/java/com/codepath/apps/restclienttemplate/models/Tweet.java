@@ -16,6 +16,7 @@ public class Tweet {
     public long uid; // database ID for the tweet
     public String createdAt;
     public User user;
+    public String mediaUrl;
 
     public Tweet() {
     }
@@ -29,6 +30,12 @@ public class Tweet {
         tweet.uid = jsonObject.getLong("id");
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+
+        if (jsonObject.has("entities") && jsonObject.getJSONObject("entities").has("media")) {
+            tweet.mediaUrl = jsonObject.getJSONObject("entities").getJSONArray("media").getJSONObject(0).getString("media_url");
+        } else {
+            tweet.mediaUrl = "";
+        }
 
         return tweet;
     }

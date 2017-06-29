@@ -9,6 +9,7 @@ android {
         applicationId "com.codepath.apps.restclienttemplate"
         minSdkVersion 17
         targetSdkVersion 25
+        vectorDrawables.useSupportLibrary = true
     }
 
     // Related to https://github.com/scribejava/scribejava/issues/480
@@ -46,7 +47,9 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
     compile 'com.codepath.libraries:android-oauth-handler:1.2.5'
     compile 'com.android.support:appcompat-v7:25.3.1'
+
     compile 'com.github.bumptech.glide:glide:3.8.0'
+
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:recyclerview-v7:25.3.1'
@@ -57,4 +60,10 @@ dependencies {
     compile "com.android.support:appcompat-v7:${supportLibVersion}"
     compile "com.android.support:design:${supportLibVersion}"
     compile "com.android.support:recyclerview-v7:${supportLibVersion}"
+
+    compile 'jp.wasabeef:glide-transformations:2.0.2'
+    // If you want to use the GPU Filters
+    compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+
+    compile 'com.android.support:support-vector-drawable'
 }

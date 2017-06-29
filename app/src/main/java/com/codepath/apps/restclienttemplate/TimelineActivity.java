@@ -71,10 +71,17 @@ public class TimelineActivity extends AppCompatActivity {
         // RecyclerView setup (layout manager, use adapter)
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(tweetAdapter);
+        MyDividerItemDecoration dividerItemDecoration = new MyDividerItemDecoration(rvTweets.getContext());
+        rvTweets.addItemDecoration(dividerItemDecoration);
 
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
         //getSupportActionBar().setLogo(R.drawable.ic_launcher_twitter_round);
         //getSupportActionBar().setDisplayUseLogoEnabled(true);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.ic_launcher_twitter);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setTitle("");
 
         populateTimeline();
     }

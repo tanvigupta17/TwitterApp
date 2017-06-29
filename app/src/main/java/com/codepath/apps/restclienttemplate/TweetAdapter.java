@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created by tanvigupta on 6/26/17.
@@ -60,7 +63,23 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         String s = tweet.user.profileImageUrl;
         s = s.replace("normal", "bigger");
-        Glide.with(context).load(s).into(holder.ivProfileImage);
+        Glide
+                .with(context)
+                .load(s)
+                .bitmapTransform(new RoundedCornersTransformation(context, 20, 0))
+                .into(holder.ivProfileImage);
+
+        if (tweet.mediaUrl != "") {
+            Log.i("TweetAdapter", tweet.mediaUrl);
+            holder.ivMediaImage.setVisibility(View.VISIBLE);
+            Glide
+                    .with(context)
+                    .load(tweet.mediaUrl)
+                    .bitmapTransform(new RoundedCornersTransformation(context, 50, 0))
+                    .into(holder.ivMediaImage);
+        } else {
+            holder.ivMediaImage.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -111,6 +130,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public TextView tvBody;
         public TextView tvHandle;
         public TextView tvTimestamp;
+        public ImageView ivMediaImage;
 
         // constructor
         public ViewHolder(View itemView) {
@@ -122,6 +142,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvHandle = (TextView) itemView.findViewById(R.id.tvHandle);
             tvTimestamp = (TextView) itemView.findViewById(R.id.tvTimestamp);
+            ivMediaImage = (ImageView) itemView.findViewById(R.id.ivMediaImage);
         }
     }
 }
