@@ -65,8 +65,8 @@ public class TimelineActivity extends AppCompatActivity {
         // initialize arraylist
         tweets = new ArrayList<>();
 
-        //construct the adapter from the arraylist
-        tweetAdapter = new TweetAdapter(tweets);
+        //construct the adapter from the array list
+        tweetAdapter = new TweetAdapter(tweets, this);
 
         // RecyclerView setup (layout manager, use adapter)
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
@@ -132,6 +132,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     public void onComposeAction(MenuItem miCompose) {
         Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
+        intent.putExtra("reply", false);
         startActivityForResult(intent, REQUEST_CODE);
     }
 

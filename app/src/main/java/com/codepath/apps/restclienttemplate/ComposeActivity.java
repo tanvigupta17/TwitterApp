@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -24,8 +25,11 @@ public class ComposeActivity extends AppCompatActivity {
 
     EditText etCompose;
     Button btnTweet;
+    TextView tvReplyBlurb;
 
     TwitterClient client;
+
+    long replyingToTweet;
 
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
@@ -52,14 +56,42 @@ public class ComposeActivity extends AppCompatActivity {
         // perform find view by id lookups
         etCompose = (EditText) findViewById(R.id.etCompose);
         btnTweet = (Button) findViewById(R.id.btnTweet);
+        tvReplyBlurb = (TextView) findViewById(R.id.tvReplyBlurb);
 
         etCompose.addTextChangedListener(textWatcher);
+
+        Intent in = getIntent();
+        boolean reply = in.getBooleanExtra("reply", false);
+
+        // if replying to a previous tweet,
+        if (reply) {
+            // extract previous tweet
+            Tweet replyingTo = (Tweet) Parcels.unwrap(in.getParcelableExtra("tweet"));
+
+            // append @handle to which reply is being sent to response
+            etCompose.setText(String.format("@" + replyingTo.user.screenName), TextView.BufferType.EDITABLE);
+
+            // get id of previous tweet to send in POST network call
+            replyingToTweet = replyingTo.uid;
+
+            // show reply blurb
+            tvReplyBlurb.setVisibility(View.VISIBLE);
+            // set reply blurb text
+            tvReplyBlurb.setText(String.format("Replying to @" + replyingTo.user.screenName), TextView.BufferType.EDITABLE);
+        } else {
+            // no previous tweet id
+            replyingToTweet = -1;
+
+            // hide reply blurb
+            tvReplyBlurb.setVisibility(View.GONE);
+        }
 
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Make network request to post data from Twitter API
-                client.sendTweet(etCompose.getText().toString(), new JsonHttpResponseHandler() {
+                // make network request to post data from Twitter API
+                // this jumps to TwitterClient
+                client.sendTweet(etCompose.getText().toString(), replyingToTweet, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         Log.d("TwitterClient", response.toString());
@@ -70,6 +102,8 @@ public class ComposeActivity extends AppCompatActivity {
                             Intent intent = new Intent();
                             intent.putExtra("tweet", Parcels.wrap(tweet));
 
+                            // return to required activity
+                            // this jumps to TimelineActivity
                             setResult(RESULT_OK, intent);
                             finish();
                         } catch (JSONException e) {

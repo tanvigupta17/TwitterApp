@@ -13,7 +13,7 @@ public class User {
 
     // attributes of this class
     public String name;
-    public Long uid;
+    public long uid;
     public String screenName;
     public String profileImageUrl;
 

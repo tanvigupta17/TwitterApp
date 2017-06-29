@@ -1,17 +1,20 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+
+import org.parceler.Parcels;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,10 +32,14 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     private List<Tweet> mTweets;
 
     Context context;
+    Context mContext;
+
+    private final int REQUEST_CODE = 10;
 
     // pass Tweets array into constructor
-    public TweetAdapter(List<Tweet> tweets) {
+    public TweetAdapter(List<Tweet> tweets, Context context) {
         mTweets = tweets;
+        mContext = context;
     }
 
     // inflate layout and cache references into ViewHolder for each row
@@ -53,7 +60,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         // get the data according to position
-        Tweet tweet = mTweets.get(position);
+        final Tweet tweet = mTweets.get(position);
 
         // populate the views according to this data
         holder.tvUserName.setText(tweet.user.name);
@@ -70,7 +77,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 .into(holder.ivProfileImage);
 
         if (tweet.mediaUrl != "") {
-            Log.i("TweetAdapter", tweet.mediaUrl);
             holder.ivMediaImage.setVisibility(View.VISIBLE);
             Glide
                     .with(context)
@@ -80,6 +86,16 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         } else {
             holder.ivMediaImage.setVisibility(View.GONE);
         }
+
+        holder.btnReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ComposeActivity.class);
+                intent.putExtra("reply", true);
+                intent.putExtra("tweet", Parcels.wrap(tweet));
+                ((TimelineActivity) mContext).startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
     }
 
     @Override
@@ -131,6 +147,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public TextView tvHandle;
         public TextView tvTimestamp;
         public ImageView ivMediaImage;
+        public ImageButton btnReply;
 
         // constructor
         public ViewHolder(View itemView) {
@@ -143,6 +160,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvHandle = (TextView) itemView.findViewById(R.id.tvHandle);
             tvTimestamp = (TextView) itemView.findViewById(R.id.tvTimestamp);
             ivMediaImage = (ImageView) itemView.findViewById(R.id.ivMediaImage);
+            btnReply = (ImageButton) itemView.findViewById(R.id.btnReply);
         }
     }
 }
