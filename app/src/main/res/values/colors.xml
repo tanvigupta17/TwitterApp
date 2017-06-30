@@ -21,4 +21,5 @@
     <color name="inline_action_retweet_pressed">@color/medium_gray_50</color>
     <color name="white">@android:color/white</color>
     <color name="dark_gray">#ff657786</color>
+    <color name="gold">#ffffd700</color>
 </resources>

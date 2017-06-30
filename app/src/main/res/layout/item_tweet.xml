@@ -75,8 +75,27 @@
         android:layout_below="@+id/ivMediaImage"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:backgroundTint="@android:color/transparent"
-        android:color="@drawable/states_reply"
         android:padding="5dp"
         app:srcCompat="@drawable/ic_vector_reply" />
+
+    <ImageButton
+        android:id="@+id/btnRetweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent"
+        android:tint="@color/medium_gray"
+        app:srcCompat="@drawable/ic_vector_retweet"
+        android:layout_below="@+id/ivMediaImage"
+        android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:id="@+id/btnFav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/ivMediaImage"
+        android:backgroundTint="@android:color/transparent"
+        android:tint="@color/medium_gray"
+        app:srcCompat="@drawable/ic_vector_heart" />
 
 </RelativeLayout>

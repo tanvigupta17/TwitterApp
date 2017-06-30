@@ -17,6 +17,8 @@ public class Tweet {
     public String createdAt;
     public User user;
     public String mediaUrl;
+    public boolean retweeted;
+    public boolean favorited;
 
     public Tweet() {
     }
@@ -36,6 +38,9 @@ public class Tweet {
         } else {
             tweet.mediaUrl = "";
         }
+
+        tweet.retweeted = jsonObject.getBoolean("retweeted");
+        tweet.favorited = jsonObject.getBoolean("favorited");
 
         return tweet;
     }

@@ -147,6 +147,13 @@ public class TimelineActivity extends AppCompatActivity {
         }
     }
 
+    public void finishRetweet(Intent data) {
+        Tweet tweet = (Tweet) Parcels.unwrap(data.getParcelableExtra("tweet"));
+        tweets.add(0, tweet);
+        tweetAdapter.notifyItemInserted(0);
+        rvTweets.scrollToPosition(0);
+    }
+
     private void populateTimeline() {
         // Make network request to get data from Twitter API
         client.getHomeTimeline(new JsonHttpResponseHandler() {
