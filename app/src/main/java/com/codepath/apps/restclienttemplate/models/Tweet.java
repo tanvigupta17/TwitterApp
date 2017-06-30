@@ -17,6 +17,7 @@ public class Tweet {
     public String createdAt;
     public User user;
     public String mediaUrl;
+    public String url; // to remove from tweet body
     public boolean retweeted;
     public boolean favorited;
     public int retweet_count;
@@ -37,8 +38,12 @@ public class Tweet {
 
         if (jsonObject.has("entities") && jsonObject.getJSONObject("entities").has("media")) {
             tweet.mediaUrl = jsonObject.getJSONObject("entities").getJSONArray("media").getJSONObject(0).getString("media_url");
+            tweet.url = jsonObject.getJSONObject("entities").getJSONArray("media").getJSONObject(0).getString("url");
+
+            tweet.body = tweet.body.replace(tweet.url, "");
         } else {
             tweet.mediaUrl = "";
+            tweet.url = "";
         }
 
         tweet.retweeted = jsonObject.getBoolean("retweeted");

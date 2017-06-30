@@ -95,7 +95,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             Glide
                     .with(context)
                     .load(tweet.mediaUrl)
-                    .bitmapTransform(new RoundedCornersTransformation(context, 50, 0))
+                    .bitmapTransform(new RoundedCornersTransformation(context, 30, 0))
                     .into(holder.ivMediaImage);
         } else {
             holder.ivMediaImage.setVisibility(View.GONE);
@@ -316,7 +316,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     }
 
     // create ViewHolder class
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView ivProfileImage;
         public TextView tvUserName;
         public TextView tvBody;
@@ -345,6 +345,20 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             btnFav = (ImageButton) itemView.findViewById(R.id.btnFav);
             tvRTCount = (TextView) itemView.findViewById(R.id.tvRTCount);
             tvFavCount = (TextView) itemView.findViewById(R.id.tvFavCount);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+
+            if (position != RecyclerView.NO_POSITION) {
+                Tweet tweet = mTweets.get(position);
+                Intent in = new Intent(context, DetailActivity.class);
+                in.putExtra("tweet", Parcels.wrap(tweet));
+                context.startActivity(in);
+            }
         }
     }
 }
