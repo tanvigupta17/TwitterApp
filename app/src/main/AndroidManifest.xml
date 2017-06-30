@@ -36,8 +36,8 @@
         <activity android:name=".TimelineActivity" />
         <activity
             android:name=".ComposeActivity"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:windowSoftInputMode="adjustResize"></activity>
+        <activity android:name=".DetailActivity"></activity>
     </application>
 
 </manifest>

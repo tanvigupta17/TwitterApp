@@ -6,7 +6,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,9 +31,11 @@ public class TimelineActivity extends AppCompatActivity {
 
     RecyclerView rvTweets;
     SwipeRefreshLayout swipeContainer;
-    Toolbar toolbar;
 
     private final int REQUEST_CODE = 10;
+
+    long oldest;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class TimelineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_timeline);
 
         client = TwitterApp.getRestClient();
+        oldest = 0;
 
         // find the recycler view and swipe container view
         rvTweets = (RecyclerView) findViewById(R.id.rvTweet);
@@ -71,7 +73,8 @@ public class TimelineActivity extends AppCompatActivity {
         tweetAdapter = new TweetAdapter(tweets, this);
 
         // RecyclerView setup (layout manager, use adapter)
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvTweets.setLayoutManager(linearLayoutManager);
         rvTweets.setAdapter(tweetAdapter);
         MyDividerItemDecoration dividerItemDecoration = new MyDividerItemDecoration(rvTweets.getContext());
         rvTweets.addItemDecoration(dividerItemDecoration);
@@ -82,12 +85,23 @@ public class TimelineActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                populateTimeline();
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvTweets.addOnScrollListener(scrollListener);
+
         populateTimeline();
     }
 
     public void fetchTimelineAsync(int page) {
         // Send the network request to fetch the updated data
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+        client.getHomeTimeline(0, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 try {
@@ -105,6 +119,8 @@ public class TimelineActivity extends AppCompatActivity {
 
                     // Now we call setRefreshing(false) to signal refresh has finished
                     swipeContainer.setRefreshing(false);
+
+                    scrollListener.resetState();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -153,7 +169,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     private void populateTimeline() {
         // Make network request to get data from Twitter API
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+        client.getHomeTimeline(oldest, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d("TwitterClient", response.toString());
@@ -164,18 +180,31 @@ public class TimelineActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d("TwitterClient", response.toString());
 
+                try {
+                    oldest = Tweet.fromJSON(response.getJSONObject(0)).uid;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 // iterate through array
                 for (int i = 0; i < response.length(); i++) {
                     // for each entry, deserialize JSON object, convert to Tweet
                     // add Tweet to list, notify adapter that dataset has changed
                     try {
                         Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
+
+                        if (tweet.uid < oldest) {
+                            oldest = tweet.uid;
+                        }
+
                         tweets.add(tweet);
                         tweetAdapter.notifyItemInserted(tweets.size() - 1);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+
+                scrollListener.resetState();
             }
 
             @Override
