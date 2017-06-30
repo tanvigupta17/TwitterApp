@@ -79,6 +79,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.tvBody.setText(tweet.body);
         holder.tvHandle.setText(String.format("@" + tweet.user.screenName));
         holder.tvTimestamp.setText(getRelativeTimeAgo(tweet.createdAt));
+        holder.tvRTCount.setText(tweet.retweet_count + "");
+        holder.tvFavCount.setText(tweet.favorite_count + "");
 
         String s = tweet.user.profileImageUrl;
         s = s.replace("normal", "bigger");
@@ -111,14 +113,18 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         if (tweet.retweeted) {
             holder.btnRetweet.setColorFilter(Color.rgb(29, 191, 99));
+            holder.tvRTCount.setTextColor(Color.rgb(29, 191, 99));
         } else {
             holder.btnRetweet.setColorFilter(Color.rgb(170, 184, 194));
+            holder.tvRTCount.setTextColor(Color.rgb(170, 184, 194));
         }
 
         if (tweet.favorited) {
             holder.btnFav.setColorFilter(Color.rgb(255, 215, 0));
+            holder.tvFavCount.setTextColor(Color.rgb(255, 215, 0));
         } else {
             holder.btnFav.setColorFilter(Color.rgb(170, 184, 194));
+            holder.tvFavCount.setTextColor(Color.rgb(170, 184, 194));
         }
 
         holder.btnRetweet.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +136,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             Log.d("TwitterClient", response.toString());
                             tweet.retweeted = true;
+                            tweet.retweet_count += 1;
                             notifyDataSetChanged();
                         }
 
@@ -162,6 +169,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             Log.d("TwitterClient", response.toString());
                             tweet.retweeted = false;
+                            tweet.retweet_count -= 1;
                             notifyDataSetChanged();
                         }
 
@@ -201,6 +209,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             Log.d("TwitterClient", response.toString());
                             tweet.favorited = true;
+                            tweet.favorite_count += 1;
                             notifyDataSetChanged();
                         }
 
@@ -233,6 +242,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             Log.d("TwitterClient", response.toString());
                             tweet.favorited = false;
+                            tweet.favorite_count -= 1;
                             notifyDataSetChanged();
                         }
 
@@ -316,6 +326,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public ImageButton btnReply;
         public ImageButton btnRetweet;
         public ImageButton btnFav;
+        public TextView tvRTCount;
+        public TextView tvFavCount;
 
         // constructor
         public ViewHolder(View itemView) {
@@ -331,6 +343,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             btnReply = (ImageButton) itemView.findViewById(R.id.btnReply);
             btnRetweet = (ImageButton) itemView.findViewById(R.id.btnRetweet);
             btnFav = (ImageButton) itemView.findViewById(R.id.btnFav);
+            tvRTCount = (TextView) itemView.findViewById(R.id.tvRTCount);
+            tvFavCount = (TextView) itemView.findViewById(R.id.tvFavCount);
         }
     }
 }

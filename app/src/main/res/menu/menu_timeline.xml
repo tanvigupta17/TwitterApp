@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/miCompose"
-        android:icon="@drawable/vector_compose_shortcut"
+        android:icon="@drawable/vector_compose_fab"
         app:showAsAction="always"
         android:onClick="onComposeAction"
         android:title="Compose">

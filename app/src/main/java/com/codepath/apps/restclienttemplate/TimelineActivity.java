@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     RecyclerView rvTweets;
     SwipeRefreshLayout swipeContainer;
+    Toolbar toolbar;
 
     private final int REQUEST_CODE = 10;
 
@@ -74,8 +76,10 @@ public class TimelineActivity extends AppCompatActivity {
         MyDividerItemDecoration dividerItemDecoration = new MyDividerItemDecoration(rvTweets.getContext());
         rvTweets.addItemDecoration(dividerItemDecoration);
 
+        // Display icon in the toolbar
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.ic_launcher_twitter);
+        getSupportActionBar().setLogo(R.drawable.logo);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         populateTimeline();
@@ -145,13 +149,6 @@ public class TimelineActivity extends AppCompatActivity {
             tweetAdapter.notifyItemInserted(0);
             rvTweets.scrollToPosition(0);
         }
-    }
-
-    public void finishRetweet(Intent data) {
-        Tweet tweet = (Tweet) Parcels.unwrap(data.getParcelableExtra("tweet"));
-        tweets.add(0, tweet);
-        tweetAdapter.notifyItemInserted(0);
-        rvTweets.scrollToPosition(0);
     }
 
     private void populateTimeline() {
