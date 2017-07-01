@@ -1,21 +1,30 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class DetailActivity extends AppCompatActivity {
@@ -25,25 +34,48 @@ public class DetailActivity extends AppCompatActivity {
     public TextView tvHandle;
     public TextView tvBody;
     public ImageView ivMediaImage;
+    public TextView tvTimestamp;
+    public ImageButton btnReply;
+    public ImageButton btnRetweet;
+    public ImageButton btnFav;
+    public TextView tvRTCount;
+    public TextView tvFavCount;
 
     Tweet tweet;
+
+    Context context;
+    Context mContext;
+    TwitterClient client;
+    TweetAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        context = this;
+        client = TwitterApp.getRestClient();
+
         ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
         tvUsername = (TextView) findViewById(R.id.tvUsername);
         tvHandle = (TextView) findViewById(R.id.tvHandle);
         tvBody = (TextView) findViewById(R.id.tvBody);
         ivMediaImage = (ImageView) findViewById(R.id.ivMediaImage);
+        tvTimestamp = (TextView) findViewById(R.id.tvTimestamp);
+        btnReply = (ImageButton) findViewById(R.id.btnReply);
+        btnRetweet = (ImageButton) findViewById(R.id.btnRetweet);
+        btnFav = (ImageButton) findViewById(R.id.btnFav);
+        tvRTCount = (TextView) findViewById(R.id.tvRTCount);
+        tvFavCount = (TextView) findViewById(R.id.tvFavCount);
 
         tweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra("tweet"));
 
         tvUsername.setText(tweet.user.name);
         tvBody.setText(tweet.body);
         tvHandle.setText(String.format("@" + tweet.user.screenName));
+        tvTimestamp.setText(getDateTime(tweet.createdAt));
+        tvRTCount.setText(tweet.retweet_count + "");
+        tvFavCount.setText(tweet.favorite_count + "");
 
         String s = tweet.user.profileImageUrl;
         s = s.replace("normal", "bigger");
@@ -62,6 +94,188 @@ public class DetailActivity extends AppCompatActivity {
         } else {
             ivMediaImage.setVisibility(View.GONE);
         }
+
+//        btnReply.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(context, ComposeActivity.class);
+//                intent.putExtra("reply", true);
+//                intent.putExtra("tweet", Parcels.wrap(tweet));
+//                ((TimelineActivity) mContext).startActivityForResult(intent, REQUEST_CODE_A);
+//            }
+//        });
+
+        if (tweet.retweeted) {
+            btnRetweet.setColorFilter(Color.rgb(29, 191, 99));
+            tvRTCount.setTextColor(Color.rgb(29, 191, 99));
+        } else {
+            btnRetweet.setColorFilter(Color.rgb(170, 184, 194));
+            tvRTCount.setTextColor(Color.rgb(170, 184, 194));
+        }
+
+        if (tweet.favorited) {
+            btnFav.setColorFilter(Color.rgb(255, 215, 0));
+            tvFavCount.setTextColor(Color.rgb(255, 215, 0));
+        } else {
+            btnFav.setColorFilter(Color.rgb(170, 184, 194));
+            tvFavCount.setTextColor(Color.rgb(170, 184, 194));
+        }
+
+        btnRetweet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!tweet.retweeted) {
+                    client.retweet(tweet.uid, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Log.d("TwitterClient", response.toString());
+                            tweet.retweeted = true;
+                            tweet.retweet_count += 1;
+                            //adapter.notifyDataSetChanged();
+                            btnRetweet.setColorFilter(Color.rgb(29, 191, 99));
+                            tvRTCount.setText(tweet.retweet_count + "");
+                            tvRTCount.setTextColor(Color.rgb(29, 191, 99));
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                            Log.d("TwitterClient", response.toString());
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            Log.d("TwitterClient", responseString);
+                            throwable.printStackTrace();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            Log.d("TwitterClient", errorResponse.toString());
+                            throwable.printStackTrace();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                            Log.d("TwitterClient", errorResponse.toString());
+                            throwable.printStackTrace();
+                        }
+                    });
+                } else {
+                    client.unRetweet(tweet.uid, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Log.d("TwitterClient", response.toString());
+                            tweet.retweeted = false;
+                            tweet.retweet_count -= 1;
+                            //adapter.notifyDataSetChanged();
+                            btnRetweet.setColorFilter(Color.rgb(170, 184, 194));
+                            tvRTCount.setText(tweet.retweet_count + "");
+                            tvRTCount.setTextColor(Color.rgb(170, 184, 194));
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                            Log.d("TwitterClient", response.toString());
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            Log.d("TwitterClient", responseString);
+                            throwable.printStackTrace();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            Log.d("TwitterClient", errorResponse.toString());
+                            throwable.printStackTrace();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                            Log.d("TwitterClient", errorResponse.toString());
+                            throwable.printStackTrace();
+                        }
+                    });
+                }
+            }
+        });
+
+        btnFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!tweet.favorited) {
+                    client.favorite(tweet.uid, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Log.d("TwitterClient", response.toString());
+                            tweet.favorited = true;
+                            tweet.favorite_count += 1;
+                            btnFav.setColorFilter(Color.rgb(255, 215, 0));
+                            tvFavCount.setText(tweet.favorite_count + "");
+                            tvFavCount.setTextColor(Color.rgb(255, 215, 0));
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                            Log.d("TwitterClient", response.toString());
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            Log.d("TwitterClient", responseString);
+                            throwable.printStackTrace();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            Log.d("TwitterClient", errorResponse.toString());
+                            throwable.printStackTrace();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                            Log.d("TwitterClient", errorResponse.toString());
+                            throwable.printStackTrace();
+                        }
+                    });
+                } else {
+                    client.unFavorite(tweet.uid, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Log.d("TwitterClient", response.toString());
+                            tweet.favorited = false;
+                            tweet.favorite_count -= 1;
+                            btnFav.setColorFilter(Color.rgb(170, 184, 194));
+                            tvFavCount.setText(tweet.favorite_count + "");
+                            tvFavCount.setTextColor(Color.rgb(170, 184, 194));
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                            Log.d("TwitterClient", response.toString());
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            Log.d("TwitterClient", responseString);
+                            throwable.printStackTrace();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            Log.d("TwitterClient", errorResponse.toString());
+                            throwable.printStackTrace();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                            Log.d("TwitterClient", errorResponse.toString());
+                            throwable.printStackTrace();
+                        }
+                    });
+                }
+            }
+        });
     }
 
     public String getDateTime(String rawJsonDate) {
@@ -72,7 +286,8 @@ public class DetailActivity extends AppCompatActivity {
         String relativeDate = "";
         try {
             long dateMillis = sf.parse(rawJsonDate).getTime();
-            relativeDate = DateUtils.formatDateTime(this, dateMillis, DateUtils.FORMAT_NUMERIC_DATE);
+            relativeDate = DateUtils.formatDateTime(this, dateMillis, DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_TIME
+                    | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_ABBREV_ALL);
 
             relativeDate = relativeDate.replace(" ago", "");
             relativeDate = relativeDate.replace(" sec.", "s");
@@ -84,5 +299,12 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         return relativeDate;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent in = new Intent();
+        setResult(RESULT_OK, in);
+        finish();
     }
 }

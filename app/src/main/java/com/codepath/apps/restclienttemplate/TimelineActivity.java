@@ -32,7 +32,8 @@ public class TimelineActivity extends AppCompatActivity {
     RecyclerView rvTweets;
     SwipeRefreshLayout swipeContainer;
 
-    private final int REQUEST_CODE = 10;
+    private final int REQUEST_CODE_A = 10;
+    private final int REQUEST_CODE_B = 20;
 
     long oldest;
     private EndlessRecyclerViewScrollListener scrollListener;
@@ -153,23 +154,25 @@ public class TimelineActivity extends AppCompatActivity {
     public void onComposeAction(MenuItem miCompose) {
         Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
         intent.putExtra("reply", false);
-        startActivityForResult(intent, REQUEST_CODE);
+        startActivityForResult(intent, REQUEST_CODE_A);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // check request code and result code first
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CODE_A && resultCode == RESULT_OK) {
             Tweet tweet = (Tweet) Parcels.unwrap(data.getParcelableExtra("tweet"));
             tweets.add(0, tweet);
             tweetAdapter.notifyItemInserted(0);
             rvTweets.scrollToPosition(0);
+        } else if (requestCode == REQUEST_CODE_B && resultCode == RESULT_OK) {
+            tweetAdapter.notifyDataSetChanged();
         }
     }
 
     private void populateTimeline() {
         // Make network request to get data from Twitter API
-        client.getHomeTimeline(oldest, new JsonHttpResponseHandler() {
+        client.getHomeTimeline(oldest - 1, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d("TwitterClient", response.toString());

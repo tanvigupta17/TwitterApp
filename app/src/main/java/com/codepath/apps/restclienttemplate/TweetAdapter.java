@@ -43,8 +43,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     TwitterClient client;
 
     private final int REQUEST_CODE = 10;
-
-    int color;
+    private final int REQUEST_CODE_B = 20;
 
     // pass Tweets array into constructor
     public TweetAdapter(List<Tweet> tweets, Context context) {
@@ -357,7 +356,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 Tweet tweet = mTweets.get(position);
                 Intent in = new Intent(context, DetailActivity.class);
                 in.putExtra("tweet", Parcels.wrap(tweet));
-                context.startActivity(in);
+                //in.putExtra("context", mContext);
+                //in.putExtra("adapter", Parcels.wrap(this));
+                ((TimelineActivity) mContext).startActivityForResult(in, REQUEST_CODE_B);
             }
         }
     }
