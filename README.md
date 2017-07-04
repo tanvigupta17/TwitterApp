@@ -2,7 +2,7 @@
 
 **TwitterApp** is an android app that allows a user to view their Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: **25** hours spent in total
+Time spent: **29** hours spent in total
 
 ## User Stories
 
@@ -24,11 +24,20 @@ The following **optional** features are implemented:
 * [x] User can **pull down to refresh tweets timeline**
 * [x] User is using **"Twitter branded" colors and styles**
 * [ ] User sees an **indeterminate progress indicator** when any background or network task is happening
+* [ ] User can **search for tweets matching a particular query** and see results
 * [x] User can **"reply" to any tweet from their home timeline**
   * [x] User that wrote the original tweet is **automatically "@" replied in compose**
 * [x] User can tap a tweet to **open a detailed tweet view**
   * [x] User can **take favorite (and unfavorite) or reweet** actions on a tweet
-* [x] User can **see embedded image media within a tweet** on list or detail view.
+* [x] User can **see embedded image media within a tweet** on list or detail view
+* [x] User can switch between Timeline and Mention views using tabs
+  * [x] User can view their home timeline tweets
+  * [x] User can view the recent mentions of their username
+* [x] User can navigate to view their own profile
+  * [x] User can see picture, tagline, # of followers, # of following, and tweets on their profile
+* [ ] User can click on the profile image in any tweet to see another user's profile
+  * [ ] User can see picture, tagline, # of followers, # of following, and tweets of clicked user
+  * [ ] Profile view should include that user's timeline
 
 The following **bonus** features are implemented:
 
