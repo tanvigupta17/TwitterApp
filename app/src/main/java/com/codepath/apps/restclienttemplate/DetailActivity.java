@@ -95,6 +95,11 @@ public class DetailActivity extends AppCompatActivity {
             ivMediaImage.setVisibility(View.GONE);
         }
 
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.ic_launcher_twitter);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setTitle("");
+
 //        btnReply.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -106,17 +111,21 @@ public class DetailActivity extends AppCompatActivity {
 //        });
 
         if (tweet.retweeted) {
+            btnRetweet.setImageResource(R.drawable.ic_vector_retweet);
             btnRetweet.setColorFilter(Color.rgb(29, 191, 99));
             tvRTCount.setTextColor(Color.rgb(29, 191, 99));
         } else {
+            btnRetweet.setImageResource(R.drawable.ic_vector_retweet_stroke);
             btnRetweet.setColorFilter(Color.rgb(170, 184, 194));
             tvRTCount.setTextColor(Color.rgb(170, 184, 194));
         }
 
         if (tweet.favorited) {
-            btnFav.setColorFilter(Color.rgb(255, 215, 0));
-            tvFavCount.setTextColor(Color.rgb(255, 215, 0));
+            btnFav.setImageResource(R.drawable.ic_vector_heart);
+            btnFav.setColorFilter(Color.rgb(224,36,94));
+            tvFavCount.setTextColor(Color.rgb(224,36,94));
         } else {
+            btnFav.setImageResource(R.drawable.ic_vector_heart_stroke);
             btnFav.setColorFilter(Color.rgb(170, 184, 194));
             tvFavCount.setTextColor(Color.rgb(170, 184, 194));
         }
@@ -132,6 +141,7 @@ public class DetailActivity extends AppCompatActivity {
                             tweet.retweeted = true;
                             tweet.retweet_count += 1;
                             //adapter.notifyDataSetChanged();
+                            btnRetweet.setImageResource(R.drawable.ic_vector_retweet);
                             btnRetweet.setColorFilter(Color.rgb(29, 191, 99));
                             tvRTCount.setText(tweet.retweet_count + "");
                             tvRTCount.setTextColor(Color.rgb(29, 191, 99));
@@ -168,6 +178,7 @@ public class DetailActivity extends AppCompatActivity {
                             tweet.retweeted = false;
                             tweet.retweet_count -= 1;
                             //adapter.notifyDataSetChanged();
+                            btnRetweet.setImageResource(R.drawable.ic_vector_retweet_stroke);
                             btnRetweet.setColorFilter(Color.rgb(170, 184, 194));
                             tvRTCount.setText(tweet.retweet_count + "");
                             tvRTCount.setTextColor(Color.rgb(170, 184, 194));
@@ -210,9 +221,10 @@ public class DetailActivity extends AppCompatActivity {
                             Log.d("TwitterClient", response.toString());
                             tweet.favorited = true;
                             tweet.favorite_count += 1;
-                            btnFav.setColorFilter(Color.rgb(255, 215, 0));
+                            btnFav.setImageResource(R.drawable.ic_vector_heart);
+                            btnFav.setColorFilter(Color.rgb(224,36,94));
                             tvFavCount.setText(tweet.favorite_count + "");
-                            tvFavCount.setTextColor(Color.rgb(255, 215, 0));
+                            tvFavCount.setTextColor(Color.rgb(224,36,94));
                         }
 
                         @Override
@@ -245,6 +257,7 @@ public class DetailActivity extends AppCompatActivity {
                             Log.d("TwitterClient", response.toString());
                             tweet.favorited = false;
                             tweet.favorite_count -= 1;
+                            btnFav.setImageResource(R.drawable.ic_vector_heart_stroke);
                             btnFav.setColorFilter(Color.rgb(170, 184, 194));
                             tvFavCount.setText(tweet.favorite_count + "");
                             tvFavCount.setTextColor(Color.rgb(170, 184, 194));

@@ -13,19 +13,8 @@ import com.codepath.apps.restclienttemplate.fragments.TweetsPagerAdapter;
 
 public class TimelineActivity extends AppCompatActivity {
 
-//    TwitterClient client;
-
-//    TweetAdapter tweetAdapter;
-//    ArrayList<Tweet> tweets;
-//
-//    RecyclerView rvTweets;
-//    SwipeRefreshLayout swipeContainer;
-
     private final int REQUEST_CODE_A = 10;
     private final int REQUEST_CODE_B = 20;
-
-//    long oldest;
-//    private EndlessRecyclerViewScrollListener scrollListener;
 
     TweetsListFragment fragmentTweetsList;
     ViewPager viewPager;
@@ -39,6 +28,7 @@ public class TimelineActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.drawable.ic_launcher_twitter);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setTitle("");
 
         // get the view pager
         viewPager = (ViewPager) findViewById(R.id.viewpager);

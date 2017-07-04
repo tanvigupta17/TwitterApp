@@ -137,9 +137,10 @@ public class ComposeActivity extends AppCompatActivity {
 
         checkText();
 
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //getSupportActionBar().setLogo(R.drawable.ic_launcher_twitter_round);
-        //getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.ic_launcher_twitter);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setTitle("");
     }
 
     private void checkText() {
@@ -155,8 +156,6 @@ public class ComposeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        //Intent in = new Intent();
-        //setResult(RESULT_OK, in);
         finish();
     }
 }

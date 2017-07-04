@@ -114,22 +114,26 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 Intent intent = new Intent(context, ComposeActivity.class);
                 intent.putExtra("reply", true);
                 intent.putExtra("tweet", Parcels.wrap(tweet));
-                ((TimelineActivity) mContext).startActivityForResult(intent, REQUEST_CODE);
+                ((AppCompatActivity) mContext).startActivityForResult(intent, REQUEST_CODE);
             }
         });
 
         if (tweet.retweeted) {
+            holder.btnRetweet.setImageResource(R.drawable.ic_vector_retweet);
             holder.btnRetweet.setColorFilter(Color.rgb(29, 191, 99));
             holder.tvRTCount.setTextColor(Color.rgb(29, 191, 99));
         } else {
+            holder.btnRetweet.setImageResource(R.drawable.ic_vector_retweet_stroke);
             holder.btnRetweet.setColorFilter(Color.rgb(170, 184, 194));
             holder.tvRTCount.setTextColor(Color.rgb(170, 184, 194));
         }
 
         if (tweet.favorited) {
-            holder.btnFav.setColorFilter(Color.rgb(255, 215, 0));
-            holder.tvFavCount.setTextColor(Color.rgb(255, 215, 0));
+            holder.btnFav.setImageResource(R.drawable.ic_vector_heart);
+            holder.btnFav.setColorFilter(Color.rgb(224,36,94));
+            holder.tvFavCount.setTextColor(Color.rgb(224,36,94));
         } else {
+            holder.btnFav.setImageResource(R.drawable.ic_vector_heart_stroke);
             holder.btnFav.setColorFilter(Color.rgb(170, 184, 194));
             holder.tvFavCount.setTextColor(Color.rgb(170, 184, 194));
         }

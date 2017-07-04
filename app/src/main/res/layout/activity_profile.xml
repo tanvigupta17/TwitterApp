@@ -19,25 +19,40 @@
             android:layout_height="75dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="10dp"
+            android:layout_margin="10dp"
             android:src="@color/gold"/>
-        
+
         <TextView
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@+id/ivProfileImage"
             android:text="Name"
-            android:textSize="16sp"/>
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvHandle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/ivProfileImage"
+            android:layout_below="@+id/tvName"
+            android:text="Handle"
+            android:textColor="@color/medium_gray"/>
+
 
         <TextView
             android:id="@+id/tvTagline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/tvName"
-            android:layout_below="@+id/tvName"
+            android:layout_below="@+id/tvHandle"
             android:text="TagLine"
-            android:textSize="12sp"/>
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/black"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -45,20 +60,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rlUserHeader"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp">
+
+        <TextView
+            android:id="@+id/tvFollowing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5 Following"/>
 
         <TextView
             android:id="@+id/tvFollowers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="5 Followers"/>
-        
-        <TextView
-            android:id="@+id/tvFollowing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="5 Following"/>
+            android:text="5 Followers" />
+
     </LinearLayout>
 
     <FrameLayout

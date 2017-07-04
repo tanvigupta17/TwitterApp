@@ -37,6 +37,11 @@ public class ProfileActivity extends AppCompatActivity {
         // commit
         ft.commit();
 
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.ic_launcher_twitter);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setTitle("");
+
         client = TwitterApp.getRestClient();
         client.getUserInfo(new JsonHttpResponseHandler() {
             @Override
@@ -44,7 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
                 User user = null;
                 try {
                     user = User.fromJSON(response);
-                    getSupportActionBar().setTitle(user.screenName);
+                    // getSupportActionBar().setTitle("@" + user.screenName);
 
                     // populate user headline
                     populateUserHeadline(user);
@@ -57,6 +62,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void populateUserHeadline(User user) {
         TextView tvName = (TextView) findViewById(R.id.tvName);
+        TextView tvHandle = (TextView) findViewById(R.id.tvHandle);
         TextView tvTagline = (TextView) findViewById(R.id.tvTagline);
         TextView tvFollowers = (TextView) findViewById(R.id.tvFollowers);
         TextView tvFollowing = (TextView) findViewById(R.id.tvFollowing);
@@ -64,6 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
         ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
 
         tvName.setText(user.name);
+        tvHandle.setText("@" + user.screenName);
         tvTagline.setText(user.tagline);
         tvFollowers.setText(user.followersCount + " Followers");
         tvFollowing.setText(user.followingCount + " Following");
