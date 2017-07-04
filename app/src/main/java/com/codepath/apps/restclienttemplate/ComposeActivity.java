@@ -152,4 +152,11 @@ public class ComposeActivity extends AppCompatActivity {
             btnTweet.setEnabled(true);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        //Intent in = new Intent();
+        //setResult(RESULT_OK, in);
+        finish();
+    }
 }

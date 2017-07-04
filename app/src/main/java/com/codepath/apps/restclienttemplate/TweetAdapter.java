@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -45,10 +46,17 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     private final int REQUEST_CODE = 10;
     private final int REQUEST_CODE_B = 20;
 
+    private TweetAdapterListener mListener;
+
+    public interface TweetAdapterListener {
+        public void onItemSelected(View view, int position);
+    }
+
     // pass Tweets array into constructor
     public TweetAdapter(List<Tweet> tweets, Context context) {
         mTweets = tweets;
         mContext = context;
+        //mListener = tweetAdapterListener;
     }
 
     // inflate layout and cache references into ViewHolder for each row
@@ -358,7 +366,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 in.putExtra("tweet", Parcels.wrap(tweet));
                 //in.putExtra("context", mContext);
                 //in.putExtra("adapter", Parcels.wrap(this));
-                ((TimelineActivity) mContext).startActivityForResult(in, REQUEST_CODE_B);
+                ((AppCompatActivity) mContext).startActivityForResult(in, REQUEST_CODE_B);
             }
         }
     }
