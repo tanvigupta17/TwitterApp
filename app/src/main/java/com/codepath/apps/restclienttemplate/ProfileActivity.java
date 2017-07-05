@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -43,7 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("");
 
         client = TwitterApp.getRestClient();
-        client.getUserInfo(new JsonHttpResponseHandler() {
+        client.getUserInfo(screenName, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 User user = null;
@@ -75,6 +76,10 @@ public class ProfileActivity extends AppCompatActivity {
         tvFollowers.setText(user.followersCount + " Followers");
         tvFollowing.setText(user.followingCount + " Following");
 
-        Glide.with(this).load(user.profileImageUrl).into(ivProfileImage);
+        Glide
+                .with(this)
+                .load(user.profileImageUrl)
+                .bitmapTransform(new RoundedCornersTransformation(this, 20, 0))
+                .into(ivProfileImage);
     }
 }

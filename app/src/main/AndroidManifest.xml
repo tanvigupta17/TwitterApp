@@ -38,7 +38,8 @@
             android:name=".ComposeActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".DetailActivity" />
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".SearchActivity"></activity>
     </application>
 
 </manifest>

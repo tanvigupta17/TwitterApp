@@ -103,7 +103,6 @@ public class ComposeActivity extends AppCompatActivity {
                             intent.putExtra("tweet", Parcels.wrap(tweet));
 
                             // return to required activity
-                            // this jumps to TimelineActivity
                             setResult(RESULT_OK, intent);
                             finish();
                         } catch (JSONException e) {

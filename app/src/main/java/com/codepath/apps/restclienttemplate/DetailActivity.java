@@ -77,11 +77,9 @@ public class DetailActivity extends AppCompatActivity {
         tvRTCount.setText(tweet.retweet_count + "");
         tvFavCount.setText(tweet.favorite_count + "");
 
-        String s = tweet.user.profileImageUrl;
-        s = s.replace("normal", "bigger");
         Glide
                 .with(this)
-                .load(s)
+                .load(tweet.user.profileImageUrl)
                 .bitmapTransform(new RoundedCornersTransformation(this, 20, 0))
                 .into(ivProfileImage);
 

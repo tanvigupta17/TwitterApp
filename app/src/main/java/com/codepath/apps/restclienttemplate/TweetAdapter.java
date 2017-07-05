@@ -89,15 +89,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.tvRTCount.setText(tweet.retweet_count + "");
         holder.tvFavCount.setText(tweet.favorite_count + "");
 
-        String s = tweet.user.profileImageUrl;
-        s = s.replace("normal", "bigger");
         Glide
                 .with(context)
-                .load(s)
+                .load(tweet.user.profileImageUrl)
                 .bitmapTransform(new RoundedCornersTransformation(context, 20, 0))
                 .into(holder.ivProfileImage);
 
-        if (tweet.mediaUrl != "") {
+        if (!tweet.mediaUrl.equals("")) {
             holder.ivMediaImage.setVisibility(View.VISIBLE);
             Glide
                     .with(context)
@@ -105,6 +103,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     .bitmapTransform(new RoundedCornersTransformation(context, 30, 0))
                     .into(holder.ivMediaImage);
         } else {
+            holder.ivMediaImage.setImageResource(0);
             holder.ivMediaImage.setVisibility(View.GONE);
         }
 
@@ -115,6 +114,15 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 intent.putExtra("reply", true);
                 intent.putExtra("tweet", Parcels.wrap(tweet));
                 ((AppCompatActivity) mContext).startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
+
+        holder.ivProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("screen_name", tweet.user.screenName);
+                mContext.startActivity(intent);
             }
         });
 

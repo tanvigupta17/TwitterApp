@@ -35,6 +35,11 @@ public class User {
         user.tagline = json.getString("description");
         user.followersCount = json.getInt("followers_count");
         user.followingCount = json.getInt("friends_count");
+
+        String s = user.profileImageUrl;
+        s = s.replace("normal", "bigger");
+        user.profileImageUrl = s;
+
         return user;
     }
 }
