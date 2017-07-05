@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +39,8 @@ public class TweetsListFragment extends Fragment {
     RecyclerView rvTweets;
     SwipeRefreshLayout swipeContainer;
 
-    private final int REQUEST_CODE_A = 10;
-    private final int REQUEST_CODE_B = 20;
+    private final int COMPOSE_REQUEST = 10;
+    private final int DETAIL_REQUEST = 20;
 
     long oldest;
     private EndlessRecyclerViewScrollListener scrollListener;
@@ -158,13 +159,22 @@ public class TweetsListFragment extends Fragment {
     public void fetchTimelineAsync(int page) {}
 
     public void activityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_A && resultCode == RESULT_OK) {
+        if (requestCode == COMPOSE_REQUEST && resultCode == RESULT_OK) {
             Tweet tweet = (Tweet) Parcels.unwrap(data.getParcelableExtra("tweet"));
             tweets.add(0, tweet);
             tweetAdapter.notifyItemInserted(0);
             rvTweets.scrollToPosition(0);
-        } else if (requestCode == REQUEST_CODE_B && resultCode == RESULT_OK) {
-            tweetAdapter.notifyDataSetChanged();
+        } else if (requestCode == DETAIL_REQUEST && resultCode == RESULT_OK) {
+            Log.i("TweetsListFragment", "Attempting to update spontaneously" + DETAIL_REQUEST);
+            Tweet tweet = (Tweet) Parcels.unwrap(data.getParcelableExtra("tweet"));
+            int position = -1;
+            for (int i = 0; i < tweets.size(); i++) {
+                if (tweets.get(i).uid == tweet.uid) {
+                    position = i;
+                    break;
+                }
+            }
+            tweetAdapter.notifyItemChanged(position);
         }
     }
 }

@@ -15,8 +15,7 @@ import com.codepath.apps.restclienttemplate.fragments.TweetsPagerAdapter;
 
 public class TimelineActivity extends AppCompatActivity {
 
-    private final int REQUEST_CODE_A = 10;
-    private final int REQUEST_CODE_B = 20;
+    private final int COMPOSE_REQUEST = 10;
 
     TweetsListFragment fragmentTweetsList;
     ViewPager viewPager;
@@ -77,7 +76,7 @@ public class TimelineActivity extends AppCompatActivity {
     public void onComposeAction(MenuItem miCompose) {
         Intent intent = new Intent(this, ComposeActivity.class);
         intent.putExtra("reply", false);
-        startActivityForResult(intent, REQUEST_CODE_A);
+        startActivityForResult(intent, COMPOSE_REQUEST);
     }
 
     public void onProfileView(MenuItem miProfile) {

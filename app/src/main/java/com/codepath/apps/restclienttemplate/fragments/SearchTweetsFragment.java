@@ -9,6 +9,7 @@ import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
@@ -48,39 +49,16 @@ public class SearchTweetsFragment extends TweetsListFragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d("TwitterClient", response.toString());
+                try {
+                    addItems(response.getJSONArray("statuses"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             // use this method since array response is expected
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d("TwitterClient", response.toString());
-
-//                try {
-//                    oldest = Tweet.fromJSON(response.getJSONObject(0)).uid;
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                // iterate through array
-//                for (int i = 0; i < response.length(); i++) {
-//                    // for each entry, deserialize JSON object, convert to Tweet
-//                    // add Tweet to list, notify adapter that dataset has changed
-//                    try {
-//                        Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
-//
-//                        if (tweet.uid < oldest) {
-//                            oldest = tweet.uid;
-//                        }
-//
-//                        tweets.add(tweet);
-//                        tweetAdapter.notifyItemInserted(tweets.size() - 1);
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//
-//                scrollListener.resetState();
-                addItems(response);
             }
 
             @Override
@@ -110,29 +88,12 @@ public class SearchTweetsFragment extends TweetsListFragment {
         // Send the network request to fetch the updated data
         client.getSearchResults(query, new JsonHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-//                try {
-//                    // clear old items before appending new ones
-//                    tweetAdapter.clear();
-//
-//                    List<Tweet> new_tweets = new ArrayList<Tweet>();
-//
-//                    for (int i = 0; i < response.length(); i++) {
-//                        new_tweets.add(Tweet.fromJSON(response.getJSONObject(i)));
-//                    }
-//
-//                    // add new items to adapter
-//                    tweetAdapter.addAll(new_tweets);
-//
-//                    // Now we call setRefreshing(false) to signal refresh has finished
-//                    swipeContainer.setRefreshing(false);
-//
-//                    scrollListener.resetState();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-
-                refreshItems(response);
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    refreshItems(response.getJSONArray("statuses"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

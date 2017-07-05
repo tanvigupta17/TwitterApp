@@ -39,12 +39,12 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     private List<Tweet> mTweets;
 
     Context context;
-    Context mContext;
+    static Context mContext;
 
     TwitterClient client;
 
-    private final int REQUEST_CODE = 10;
-    private final int REQUEST_CODE_B = 20;
+    private final int COMPOSE_REQUEST = 10;
+    private final int DETAIL_REQUEST = 20;
 
     private TweetAdapterListener mListener;
 
@@ -71,7 +71,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         return viewHolder;
     }
-
 
     // bind values based on position of the element
     @Override
@@ -113,7 +112,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 Intent intent = new Intent(context, ComposeActivity.class);
                 intent.putExtra("reply", true);
                 intent.putExtra("tweet", Parcels.wrap(tweet));
-                ((AppCompatActivity) mContext).startActivityForResult(intent, REQUEST_CODE);
+                ((AppCompatActivity) mContext).startActivityForResult(intent, COMPOSE_REQUEST);
             }
         });
 
@@ -334,6 +333,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
+    public static Context getContext() {
+        return mContext;
+    }
+
     // create ViewHolder class
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView ivProfileImage;
@@ -378,7 +381,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 in.putExtra("tweet", Parcels.wrap(tweet));
                 //in.putExtra("context", mContext);
                 //in.putExtra("adapter", Parcels.wrap(this));
-                ((AppCompatActivity) mContext).startActivityForResult(in, REQUEST_CODE_B);
+                ((AppCompatActivity) mContext).startActivityForResult(in, DETAIL_REQUEST);
             }
         }
     }

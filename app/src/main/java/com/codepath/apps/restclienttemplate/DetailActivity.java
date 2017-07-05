@@ -48,6 +48,8 @@ public class DetailActivity extends AppCompatActivity {
     TwitterClient client;
     TweetAdapter adapter;
 
+    int COMPOSE_REQUEST = 10;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +71,7 @@ public class DetailActivity extends AppCompatActivity {
         tvFavCount = (TextView) findViewById(R.id.tvFavCount);
 
         tweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra("tweet"));
+        mContext = TweetAdapter.getContext();
 
         tvUsername.setText(tweet.user.name);
         tvBody.setText(tweet.body);
@@ -98,15 +101,16 @@ public class DetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setTitle("");
 
-//        btnReply.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(context, ComposeActivity.class);
-//                intent.putExtra("reply", true);
-//                intent.putExtra("tweet", Parcels.wrap(tweet));
-//                ((TimelineActivity) mContext).startActivityForResult(intent, REQUEST_CODE_A);
-//            }
-//        });
+        // TODO: REPLY FROM DETAIL VIEW
+        btnReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ComposeActivity.class);
+                intent.putExtra("reply", true);
+                intent.putExtra("tweet", Parcels.wrap(tweet));
+                ((AppCompatActivity) mContext).startActivityForResult(intent, COMPOSE_REQUEST);
+            }
+        });
 
         if (tweet.retweeted) {
             btnRetweet.setImageResource(R.drawable.ic_vector_retweet);
@@ -315,6 +319,7 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent in = new Intent();
+        in.putExtra("tweet", Parcels.wrap(tweet));
         setResult(RESULT_OK, in);
         finish();
     }
