@@ -48,11 +48,13 @@
             android:id="@+id/tvTagline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/tvName"
-            android:layout_below="@+id/tvHandle"
+            android:layout_below="@+id/ivProfileImage"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:text="TagLine"
-            android:layout_marginTop="5dp"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:autoLink="all"
+            android:linksClickable="true"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -60,6 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rlUserHeader"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp">
 
@@ -67,14 +70,16 @@
             android:id="@+id/tvFollowing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="5 Following"/>
+            android:text="5 Following"
+            android:textColor="@color/medium_gray" />
 
         <TextView
             android:id="@+id/tvFollowers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="5 Followers" />
+            android:text="5 Followers"
+            android:textColor="@color/medium_gray" />
 
     </LinearLayout>
 
