@@ -40,6 +40,8 @@
         <activity android:name=".DetailActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SearchActivity" />
+        <activity android:name=".FollowersActivity" />
+        <activity android:name=".FriendsActivity"></activity>
     </application>
 
 </manifest>

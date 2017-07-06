@@ -1,5 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -8,6 +10,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,10 +29,14 @@ public class ProfileActivity extends AppCompatActivity {
 
     TwitterClient client;
 
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        context = this;
 
         String screenName = getIntent().getStringExtra("screen_name");
 
@@ -66,7 +73,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void populateUserHeadline(User user) {
+    public void populateUserHeadline(final User user) {
         TextView tvName = (TextView) findViewById(R.id.tvName);
         TextView tvHandle = (TextView) findViewById(R.id.tvHandle);
         TextView tvTagline = (TextView) findViewById(R.id.tvTagline);
@@ -109,6 +116,25 @@ public class ProfileActivity extends AppCompatActivity {
                 .load(user.profileImageUrl)
                 .bitmapTransform(new RoundedCornersTransformation(this, 20, 0))
                 .into(ivProfileImage);
+
+        tvFollowers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, FollowersActivity.class);
+                intent.putExtra("user_id", user.uid);
+                startActivity(intent);
+            }
+        });
+
+        tvFollowing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, FriendsActivity.class);
+                intent.putExtra("user_id", user.uid);
+                startActivity(intent);
+            }
+        });
+
     }
 
     public double truncate(int n) {
