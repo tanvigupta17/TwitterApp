@@ -72,15 +72,14 @@ public class ProfileActivity extends AppCompatActivity {
         TextView tvTagline = (TextView) findViewById(R.id.tvTagline);
         TextView tvFollowers = (TextView) findViewById(R.id.tvFollowers);
         TextView tvFollowing = (TextView) findViewById(R.id.tvFollowing);
-
         ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
 
         tvName.setText(user.name);
         tvHandle.setText("@" + user.screenName);
         tvTagline.setText(user.tagline);
 
-        String follower_count = truncateNumber(user.followersCount);
-        String following_count = truncateNumber(user.followingCount);
+        String follower_count = format(user.followersCount);
+        String following_count = format(user.followingCount);
 
         // Span to make text black
         ForegroundColorSpan redForegroundColorSpan = new ForegroundColorSpan(Color.rgb(0, 0, 0));
@@ -112,24 +111,28 @@ public class ProfileActivity extends AppCompatActivity {
                 .into(ivProfileImage);
     }
 
-    public String truncateNumber(float floatNumber) {
-        long million = 1000000L;
-        long billion = 1000000000L;
-        long trillion = 1000000000000L;
-        long number = Math.round(floatNumber);
-        if ((number >= million) && (number < billion)) {
-            float fraction = calculateFraction(number, million);
-            return Float.toString(fraction) + "M";
-        } else if ((number >= billion) && (number < trillion)) {
-            float fraction = calculateFraction(number, billion);
-            return Float.toString(fraction) + "B";
+    public double truncate(int n) {
+        double num = (double) n;
+
+        if (n >= 1000000000.0) {
+            num = num / 1000000000.0;
+        } else if (n >= 1000000.0) {
+            num = num / 1000000.0;
+        } else if (n >= 10000.0) {
+            num = num / 1000.0;
         }
-        return Long.toString(number);
+
+        return num;
     }
 
-    public float calculateFraction(long number, long divisor) {
-        long truncate = (number * 10L + (divisor / 2L)) / divisor;
-        float fraction = (float) truncate * 0.10F;
-        return fraction;
+    public String format(int n) {
+        if (n >= 1000000000) {
+            return String.format("%.2fB", truncate(n));
+        } else if (n >= 1000000) {
+            return String.format("%.1fM", truncate(n));
+        } else if (n >= 10000) {
+            return String.format("%.1fK", truncate(n));
+        }
+        return String.format(String.valueOf(n));
     }
 }

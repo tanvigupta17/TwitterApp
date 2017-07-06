@@ -17,7 +17,6 @@ public class TimelineActivity extends AppCompatActivity {
 
     private final int COMPOSE_REQUEST = 10;
 
-    TweetsListFragment fragmentTweetsList;
     ViewPager viewPager;
     TweetsPagerAdapter adapter;
 

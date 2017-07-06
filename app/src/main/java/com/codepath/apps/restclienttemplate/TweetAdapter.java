@@ -46,7 +46,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     private final int COMPOSE_REQUEST = 10;
     private final int DETAIL_REQUEST = 20;
 
-    private TweetAdapterListener mListener;
 
     public interface TweetAdapterListener {
         public void onItemSelected(View view, int position);
@@ -379,8 +378,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 Tweet tweet = mTweets.get(position);
                 Intent in = new Intent(context, DetailActivity.class);
                 in.putExtra("tweet", Parcels.wrap(tweet));
-                //in.putExtra("context", mContext);
-                //in.putExtra("adapter", Parcels.wrap(this));
                 ((AppCompatActivity) mContext).startActivityForResult(in, DETAIL_REQUEST);
             }
         }

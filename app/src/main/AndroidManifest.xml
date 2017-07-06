@@ -39,7 +39,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".DetailActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".SearchActivity" />
     </application>
 
 </manifest>
