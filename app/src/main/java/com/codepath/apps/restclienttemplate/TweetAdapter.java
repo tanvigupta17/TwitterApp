@@ -27,6 +27,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
@@ -338,34 +340,23 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
     // create ViewHolder class
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public ImageView ivProfileImage;
-        public TextView tvUserName;
-        public TextView tvBody;
-        public TextView tvHandle;
-        public TextView tvTimestamp;
-        public ImageView ivMediaImage;
-        public ImageButton btnReply;
-        public ImageButton btnRetweet;
-        public ImageButton btnFav;
-        public TextView tvRTCount;
-        public TextView tvFavCount;
+        @BindView(R.id.ivProfileImage) public ImageView ivProfileImage;
+        @BindView(R.id.tvUserName) public TextView tvUserName;
+        @BindView(R.id.tvBody) public TextView tvBody;
+        @BindView(R.id.tvHandle) public TextView tvHandle;
+        @BindView(R.id.tvTimestamp) public TextView tvTimestamp;
+        @BindView(R.id.ivMediaImage) public ImageView ivMediaImage;
+        @BindView(R.id.btnReply) public ImageButton btnReply;
+        @BindView(R.id.btnRetweet) public ImageButton btnRetweet;
+        @BindView(R.id.btnFav) public ImageButton btnFav;
+        @BindView(R.id.tvRTCount) public TextView tvRTCount;
+        @BindView(R.id.tvFavCount) public TextView tvFavCount;
 
         // constructor
         public ViewHolder(View itemView) {
             super(itemView);
 
-            // perform findViewById lookups
-            ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
-            tvUserName = (TextView) itemView.findViewById(R.id.tvUserName);
-            tvBody = (TextView) itemView.findViewById(R.id.tvBody);
-            tvHandle = (TextView) itemView.findViewById(R.id.tvHandle);
-            tvTimestamp = (TextView) itemView.findViewById(R.id.tvTimestamp);
-            ivMediaImage = (ImageView) itemView.findViewById(R.id.ivMediaImage);
-            btnReply = (ImageButton) itemView.findViewById(R.id.btnReply);
-            btnRetweet = (ImageButton) itemView.findViewById(R.id.btnRetweet);
-            btnFav = (ImageButton) itemView.findViewById(R.id.btnFav);
-            tvRTCount = (TextView) itemView.findViewById(R.id.tvRTCount);
-            tvFavCount = (TextView) itemView.findViewById(R.id.tvFavCount);
+            ButterKnife.bind(this, itemView);
 
             itemView.setOnClickListener(this);
         }

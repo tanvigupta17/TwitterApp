@@ -22,6 +22,10 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Created by tanvigupta on 7/6/17.
  */
@@ -31,11 +35,13 @@ public class UsersListFragment extends Fragment {
     UserAdapter userAdapter;
     ArrayList<User> users;
 
-    RecyclerView rvUsers;
-    SwipeRefreshLayout swipeContainer;
+    @BindView(R.id.rvUser) RecyclerView rvUsers;
+    @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
 
     long oldest;
     private EndlessRecyclerViewScrollListener scrollListener;
+
+    private Unbinder unbinder;
 
     // inflation happens inside onCreateView
     @Nullable
@@ -43,13 +49,9 @@ public class UsersListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // inflate the view
         View v = inflater.inflate(R.layout.fragments_users_list, container, false);
-
+        unbinder = ButterKnife.bind(this, v);
 
         oldest = 0;
-
-        // find the recycler view and swipe container view
-        rvUsers = (RecyclerView) v.findViewById(R.id.rvUser);
-        swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
 
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -96,6 +98,12 @@ public class UsersListFragment extends Fragment {
         rvUsers.addOnScrollListener(scrollListener);
 
         return v;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     public void addItems(JSONArray response) {

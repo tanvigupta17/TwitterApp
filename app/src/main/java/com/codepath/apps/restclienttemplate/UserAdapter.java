@@ -15,6 +15,8 @@ import com.codepath.apps.restclienttemplate.models.User;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
@@ -101,20 +103,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     // create ViewHolder class
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public ImageView ivProfileImage;
-        public TextView tvUserName;
-        public TextView tvHandle;
-        public TextView tvTagline;
+        @BindView(R.id.ivProfileImage) public ImageView ivProfileImage;
+        @BindView(R.id.tvUserName) public TextView tvUserName;
+        @BindView(R.id.tvHandle) public TextView tvHandle;
+        @BindView(R.id.tvTagline) public TextView tvTagline;
 
         // constructor
         public ViewHolder(View itemView) {
             super(itemView);
 
-            // perform findViewById lookups
-            ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
-            tvUserName = (TextView) itemView.findViewById(R.id.tvUserName);
-            tvHandle = (TextView) itemView.findViewById(R.id.tvHandle);
-            tvTagline = (TextView) itemView.findViewById(R.id.tvTagline);
+            ButterKnife.bind(this, itemView);
 
             itemView.setOnClickListener(this);
         }

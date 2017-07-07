@@ -19,13 +19,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
 public class ComposeActivity extends AppCompatActivity {
 
-    EditText etCompose;
-    Button btnTweet;
-    TextView tvReplyBlurb;
+    @BindView(R.id.etCompose) EditText etCompose;
+    @BindView(R.id.btnTweet) Button btnTweet;
+    @BindView(R.id.tvReplyBlurb) TextView tvReplyBlurb;
 
     TwitterClient client;
 
@@ -51,12 +53,9 @@ public class ComposeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
 
-        client = TwitterApp.getRestClient();
+        ButterKnife.bind(this);
 
-        // perform find view by id lookups
-        etCompose = (EditText) findViewById(R.id.etCompose);
-        btnTweet = (Button) findViewById(R.id.btnTweet);
-        tvReplyBlurb = (TextView) findViewById(R.id.tvReplyBlurb);
+        client = TwitterApp.getRestClient();
 
         etCompose.addTextChangedListener(textWatcher);
 

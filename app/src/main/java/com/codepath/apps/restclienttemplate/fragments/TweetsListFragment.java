@@ -25,6 +25,10 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 import static android.app.Activity.RESULT_OK;
 
 /**
@@ -36,8 +40,8 @@ public class TweetsListFragment extends Fragment {
     TweetAdapter tweetAdapter;
     ArrayList<Tweet> tweets;
 
-    RecyclerView rvTweets;
-    SwipeRefreshLayout swipeContainer;
+    @BindView(R.id.rvTweet) RecyclerView rvTweets;
+    @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
 
     private final int COMPOSE_REQUEST = 10;
     private final int DETAIL_REQUEST = 20;
@@ -45,19 +49,17 @@ public class TweetsListFragment extends Fragment {
     long oldest;
     private EndlessRecyclerViewScrollListener scrollListener;
 
+    private Unbinder unbinder;
+
     // inflation happens inside onCreateView
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // inflate the view
         View v = inflater.inflate(R.layout.fragments_tweets_list, container, false);
-
+        unbinder = ButterKnife.bind(this, v);
 
         oldest = 0;
-
-        // find the recycler view and swipe container view
-        rvTweets = (RecyclerView) v.findViewById(R.id.rvTweet);
-        swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
 
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -101,6 +103,12 @@ public class TweetsListFragment extends Fragment {
         rvTweets.addOnScrollListener(scrollListener);
 
         return v;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     public void addItems(JSONArray response) {

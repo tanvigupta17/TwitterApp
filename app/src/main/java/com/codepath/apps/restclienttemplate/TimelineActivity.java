@@ -13,11 +13,14 @@ import android.view.MenuItem;
 import com.codepath.apps.restclienttemplate.fragments.TweetsListFragment;
 import com.codepath.apps.restclienttemplate.fragments.TweetsPagerAdapter;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class TimelineActivity extends AppCompatActivity {
 
     private final int COMPOSE_REQUEST = 10;
 
-    ViewPager viewPager;
+    @BindView(R.id.viewpager) ViewPager viewPager;
     TweetsPagerAdapter adapter;
 
     @Override
@@ -25,13 +28,13 @@ public class TimelineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
+        ButterKnife.bind(this);
+
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.drawable.ic_launcher_twitter);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setTitle("");
 
-        // get the view pager
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
         adapter = new TweetsPagerAdapter(getSupportFragmentManager(), this);
 
         // set up the adapter for the pager

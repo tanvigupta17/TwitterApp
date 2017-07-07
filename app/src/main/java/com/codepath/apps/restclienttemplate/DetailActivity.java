@@ -24,22 +24,24 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class DetailActivity extends AppCompatActivity {
 
-    public ImageView ivProfileImage;
-    public TextView tvUsername;
-    public TextView tvHandle;
-    public TextView tvBody;
-    public ImageView ivMediaImage;
-    public TextView tvTimestamp;
-    public ImageButton btnReply;
-    public ImageButton btnRetweet;
-    public ImageButton btnFav;
-    public TextView tvRTCount;
-    public TextView tvFavCount;
+    @BindView(R.id.ivProfileImage) public ImageView ivProfileImage;
+    @BindView(R.id.tvUsername) public TextView tvUsername;
+    @BindView(R.id.tvHandle) public TextView tvHandle;
+    @BindView(R.id.tvBody) public TextView tvBody;
+    @BindView(R.id.ivMediaImage) public ImageView ivMediaImage;
+    @BindView(R.id.tvTimestamp) public TextView tvTimestamp;
+    @BindView(R.id.btnReply) public ImageButton btnReply;
+    @BindView(R.id.btnRetweet) public ImageButton btnRetweet;
+    @BindView(R.id.btnFav) public ImageButton btnFav;
+    @BindView(R.id.tvRTCount) public TextView tvRTCount;
+    @BindView(R.id.tvFavCount) public TextView tvFavCount;
 
     Tweet tweet;
 
@@ -55,20 +57,10 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        ButterKnife.bind(this);
+
         context = this;
         client = TwitterApp.getRestClient();
-
-        ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
-        tvUsername = (TextView) findViewById(R.id.tvUsername);
-        tvHandle = (TextView) findViewById(R.id.tvHandle);
-        tvBody = (TextView) findViewById(R.id.tvBody);
-        ivMediaImage = (ImageView) findViewById(R.id.ivMediaImage);
-        tvTimestamp = (TextView) findViewById(R.id.tvTimestamp);
-        btnReply = (ImageButton) findViewById(R.id.btnReply);
-        btnRetweet = (ImageButton) findViewById(R.id.btnRetweet);
-        btnFav = (ImageButton) findViewById(R.id.btnFav);
-        tvRTCount = (TextView) findViewById(R.id.tvRTCount);
-        tvFavCount = (TextView) findViewById(R.id.tvFavCount);
 
         tweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra("tweet"));
         mContext = TweetAdapter.getContext();
@@ -101,7 +93,6 @@ public class DetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setTitle("");
 
-        // TODO: REPLY FROM DETAIL VIEW
         btnReply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
