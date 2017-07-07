@@ -22,8 +22,11 @@ public class FollowersFragment extends UsersListFragment {
 
     TwitterClient client;
 
+    static long cursor;
+
     public static FollowersFragment newInstance(long uid) {
         FollowersFragment followersFragment = new FollowersFragment();
+        cursor = -1L;
         Bundle args = new Bundle();
         args.putLong("user_id", uid);
         followersFragment.setArguments(args);
@@ -41,16 +44,27 @@ public class FollowersFragment extends UsersListFragment {
     }
 
     @Override
+    public void setCursor(long l) {
+        cursor = l;
+    }
+
+    @Override
+    public long getCursor() {
+        return cursor;
+    }
+
+    @Override
     public void populateTimeline() {
         // unpackage bundle that comes from activity
         long uid = getArguments().getLong("user_id");
         // Make network request to get data from Twitter API
-        client.getFollowersList(uid, new JsonHttpResponseHandler() {
+        client.getFollowersList(uid, getCursor(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d("TwitterClient", response.toString());
                 try {
                     addItems(response.getJSONArray("users"));
+                    setCursor(response.getLong("next_cursor"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -85,7 +99,7 @@ public class FollowersFragment extends UsersListFragment {
         // unpackage bundle that comes from activity
         long uid = getArguments().getLong("user_id");
         // Send the network request to fetch the updated data
-        client.getFollowersList(uid, new JsonHttpResponseHandler() {
+        client.getFollowersList(uid, -1L, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {

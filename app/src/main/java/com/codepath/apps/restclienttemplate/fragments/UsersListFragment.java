@@ -82,16 +82,18 @@ public class UsersListFragment extends Fragment {
         rvUsers.addItemDecoration(dividerItemDecoration);
 
         // TODO: Endless scroll follower/following equivalent
-//        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-//            @Override
-//            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-//                // Triggered only when new data needs to be appended to the list
-//                // Add whatever code is needed to append new items to the bottom of the list
-//                populateTimeline();
-//            }
-//        };
-//        // Adds the scroll listener to RecyclerView
-//        rvTweets.addOnScrollListener(scrollListener);
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                if (getCursor() != 0L) {
+                    populateTimeline();
+                }
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvUsers.addOnScrollListener(scrollListener);
 
         return v;
     }
@@ -121,7 +123,7 @@ public class UsersListFragment extends Fragment {
             }
         }
 
-        //scrollListener.resetState();
+        scrollListener.resetState();
     }
 
     public void populateTimeline() {}
@@ -143,11 +145,17 @@ public class UsersListFragment extends Fragment {
             // Now we call setRefreshing(false) to signal refresh has finished
             swipeContainer.setRefreshing(false);
 
-            //scrollListener.resetState();
+            scrollListener.resetState();
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     public void fetchTimelineAsync(int page) {}
+
+    public void setCursor(long l) {}
+
+    public long getCursor() {
+        return 0L;
+    }
 }

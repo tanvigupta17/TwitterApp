@@ -56,7 +56,6 @@ public class SearchTweetsFragment extends TweetsListFragment {
                 }
             }
 
-            // use this method since array response is expected
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
             }
