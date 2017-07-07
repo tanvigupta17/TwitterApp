@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
@@ -50,7 +51,7 @@ public class SearchTweetsFragment extends TweetsListFragment {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d("TwitterClient", response.toString());
                 try {
-                    addItems(response.getJSONArray("statuses"));
+                    addItems(response.getJSONArray("statuses"), "search");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -64,18 +65,21 @@ public class SearchTweetsFragment extends TweetsListFragment {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d("TwitterClient", responseString);
                 throwable.printStackTrace();
+                Toast.makeText(getContext(), "No internet, search unavailable", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 Log.d("TwitterClient", errorResponse.toString());
                 throwable.printStackTrace();
+                Toast.makeText(getContext(), "No internet, search unavailable", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
                 Log.d("TwitterClient", errorResponse.toString());
                 throwable.printStackTrace();
+                Toast.makeText(getContext(), "No internet, search unavailable", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -89,7 +93,7 @@ public class SearchTweetsFragment extends TweetsListFragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    refreshItems(response.getJSONArray("statuses"));
+                    refreshItems(response.getJSONArray("statuses"), "search");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -1,5 +1,11 @@
 package com.codepath.apps.restclienttemplate.models;
 
+import com.codepath.apps.restclienttemplate.MyDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
@@ -8,16 +14,31 @@ import org.parceler.Parcel;
  * Created by tanvigupta on 6/26/17.
  */
 
-@Parcel
-public class User {
+@Table(database = MyDatabase.class)
+@Parcel(analyze={User.class})
+public class User extends BaseModel {
 
     // attributes of this class
+    @Column
     public String name;
+
+    @Column
+    @PrimaryKey
     public long uid;
+
+    @Column
     public String screenName;
+
+    @Column
     public String profileImageUrl;
+
+    @Column
     public String tagline;
+
+    @Column
     public int followingCount;
+
+    @Column
     public int followersCount;
 
     public User() {
@@ -39,6 +60,9 @@ public class User {
         String s = user.profileImageUrl;
         s = s.replace("normal", "bigger");
         user.profileImageUrl = s;
+
+        // enter user into database
+        user.save();
 
         return user;
     }

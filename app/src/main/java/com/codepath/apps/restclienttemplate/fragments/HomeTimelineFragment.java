@@ -3,13 +3,19 @@ package com.codepath.apps.restclienttemplate.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
+import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.Tweet_Table;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -43,25 +49,40 @@ public class HomeTimelineFragment extends TweetsListFragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d("TwitterClient", response.toString());
-                addItems(response);
+                addItems(response, "home");
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d("TwitterClient", responseString);
                 throwable.printStackTrace();
+                if (!isConnected) {
+                    Toast.makeText(getContext(), "No internet, loading from server", Toast.LENGTH_LONG).show();
+                    List<Tweet> tweets = SQLite.select().from(Tweet.class).where(Tweet_Table.location.is("home")).orderBy(Tweet_Table.uid, false).queryList();
+                    addItems(tweets);
+                }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("TwitterClient", errorResponse.toString());
+                Log.d("TwitterClient", throwable.getMessage());
                 throwable.printStackTrace();
+                if (!isConnected) {
+                    Toast.makeText(getContext(), "No internet, loading from server", Toast.LENGTH_LONG).show();
+                    List<Tweet> tweets = SQLite.select().from(Tweet.class).where(Tweet_Table.location.is("home")).orderBy(Tweet_Table.uid, false).queryList();
+                    addItems(tweets);
+                }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                Log.d("TwitterClient", errorResponse.toString());
+                Log.d("TwitterClient", throwable.getMessage());
                 throwable.printStackTrace();
+                if (!isConnected) {
+                    Toast.makeText(getContext(), "No internet, loading from server", Toast.LENGTH_LONG).show();
+                    List<Tweet> tweets = SQLite.select().from(Tweet.class).where(Tweet_Table.location.is("home")).orderBy(Tweet_Table.uid, false).queryList();
+                    addItems(tweets);
+                }
             }
         });
     }
@@ -72,7 +93,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
         client.getHomeTimeline(0, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                refreshItems(response);
+                refreshItems(response, "home");
             }
 
             @Override

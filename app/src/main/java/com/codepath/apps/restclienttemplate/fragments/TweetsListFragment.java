@@ -1,6 +1,9 @@
 package com.codepath.apps.restclienttemplate.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -50,6 +53,10 @@ public class TweetsListFragment extends Fragment {
     private EndlessRecyclerViewScrollListener scrollListener;
 
     private Unbinder unbinder;
+
+    ConnectivityManager cm;
+    NetworkInfo activeNetwork;
+    boolean isConnected;
 
     // inflation happens inside onCreateView
     @Nullable
@@ -102,6 +109,12 @@ public class TweetsListFragment extends Fragment {
         // Adds the scroll listener to RecyclerView
         rvTweets.addOnScrollListener(scrollListener);
 
+        // check internet connection
+        cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        activeNetwork = cm.getActiveNetworkInfo();
+        isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+
         return v;
     }
 
@@ -111,9 +124,9 @@ public class TweetsListFragment extends Fragment {
         unbinder.unbind();
     }
 
-    public void addItems(JSONArray response) {
+    public void addItems(JSONArray response, String location) {
         try {
-            oldest = Tweet.fromJSON(response.getJSONObject(0)).uid;
+            oldest = Tweet.fromJSON(response.getJSONObject(0), location).uid;
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -123,7 +136,7 @@ public class TweetsListFragment extends Fragment {
             // for each entry, deserialize JSON object, convert to Tweet
             // add Tweet to list, notify adapter that dataset has changed
             try {
-                Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
+                Tweet tweet = Tweet.fromJSON(response.getJSONObject(i), location);
 
                 if (tweet.uid < oldest) {
                     oldest = tweet.uid;
@@ -139,9 +152,29 @@ public class TweetsListFragment extends Fragment {
         scrollListener.resetState();
     }
 
+    public void addItems(List<Tweet> response) {
+        oldest = response.get(0).uid;
+
+        // iterate through array
+        for (int i = 0; i < response.size(); i++) {
+            // for each entry, deserialize JSON object, convert to Tweet
+            // add Tweet to list, notify adapter that dataset has changed
+            Tweet tweet = response.get(i);
+
+            if (tweet.uid < oldest) {
+                oldest = tweet.uid;
+            }
+
+            tweets.add(tweet);
+            tweetAdapter.notifyItemInserted(tweets.size() - 1);
+        }
+
+        scrollListener.resetState();
+    }
+
     public void populateTimeline() {}
 
-    public void refreshItems(JSONArray response) {
+    public void refreshItems(JSONArray response, String location) {
         try {
             // clear old items before appending new ones
             tweetAdapter.clear();
@@ -149,7 +182,7 @@ public class TweetsListFragment extends Fragment {
             List<Tweet> new_tweets = new ArrayList<Tweet>();
 
             for (int i = 0; i < response.length(); i++) {
-                new_tweets.add(Tweet.fromJSON(response.getJSONObject(i)));
+                new_tweets.add(Tweet.fromJSON(response.getJSONObject(i), location));
             }
 
             // add new items to adapter

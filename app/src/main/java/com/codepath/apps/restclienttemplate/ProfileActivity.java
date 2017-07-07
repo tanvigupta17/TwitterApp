@@ -38,7 +38,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         context = this;
 
-        String screenName = getIntent().getStringExtra("screen_name");
+        final String screenName = getIntent().getStringExtra("screen_name");
 
         // create the user fragment
         UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(screenName);
@@ -62,7 +62,6 @@ public class ProfileActivity extends AppCompatActivity {
                 User user = null;
                 try {
                     user = User.fromJSON(response);
-                    // getSupportActionBar().setTitle("@" + user.screenName);
 
                     // populate user headline
                     populateUserHeadline(user);

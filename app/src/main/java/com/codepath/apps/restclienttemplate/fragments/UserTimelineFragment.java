@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
@@ -54,25 +55,34 @@ public class UserTimelineFragment extends TweetsListFragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d("TwitterClient", response.toString());
-                addItems(response);
+                addItems(response, "user");
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d("TwitterClient", responseString);
                 throwable.printStackTrace();
+                if (!isConnected) {
+                    Toast.makeText(getContext(), "No internet, cannot load tweets", Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("TwitterClient", errorResponse.toString());
+                Log.d("TwitterClient", throwable.getMessage());
                 throwable.printStackTrace();
+                if (!isConnected) {
+                    Toast.makeText(getContext(), "No internet, cannot load tweets", Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                Log.d("TwitterClient", errorResponse.toString());
+                Log.d("TwitterClient", throwable.getMessage());
                 throwable.printStackTrace();
+                if (!isConnected) {
+                    Toast.makeText(getContext(), "No internet, cannot load tweets", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -85,7 +95,7 @@ public class UserTimelineFragment extends TweetsListFragment {
         client.getUserTimeline(0, screenName, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                refreshItems(response);
+                refreshItems(response, "user");
             }
 
             @Override

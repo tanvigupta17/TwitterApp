@@ -29,7 +29,7 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 	@Override
 	public void onLoginSuccess() {
 		// Display success message to user
-		Toast.makeText(this, "Success!", Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "Logged in", Toast.LENGTH_LONG).show();
 
 		// Show timeline on login
 		Intent i = new Intent(this, TimelineActivity.class);

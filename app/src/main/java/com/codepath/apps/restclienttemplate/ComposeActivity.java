@@ -96,7 +96,7 @@ public class ComposeActivity extends AppCompatActivity {
                         Log.d("TwitterClient", response.toString());
 
                         try {
-                            Tweet tweet = Tweet.fromJSON(response);
+                            Tweet tweet = Tweet.fromJSON(response, "home");
 
                             Intent intent = new Intent();
                             intent.putExtra("tweet", Parcels.wrap(tweet));
