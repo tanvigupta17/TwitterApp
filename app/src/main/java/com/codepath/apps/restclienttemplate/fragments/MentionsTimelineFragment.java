@@ -3,7 +3,6 @@ package com.codepath.apps.restclienttemplate.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.TwitterApp;
 import com.codepath.apps.restclienttemplate.TwitterClient;
@@ -57,7 +56,6 @@ public class MentionsTimelineFragment extends TweetsListFragment {
                 Log.d("TwitterClient", responseString);
                 throwable.printStackTrace();
                 if (!isConnected) {
-                    Toast.makeText(getContext(), "No internet, loading from server", Toast.LENGTH_LONG).show();
                     List<Tweet> tweets = SQLite.select().from(Tweet.class).where(Tweet_Table.location.is("mentions")).queryList();
                     addItems(tweets);
                 }
@@ -68,7 +66,6 @@ public class MentionsTimelineFragment extends TweetsListFragment {
                 Log.d("TwitterClient", throwable.getMessage());
                 throwable.printStackTrace();
                 if (!isConnected) {
-                    Toast.makeText(getContext(), "No internet, loading from server", Toast.LENGTH_LONG).show();
                     List<Tweet> tweets = SQLite.select().from(Tweet.class).where(Tweet_Table.location.is("mentions")).queryList();
                     addItems(tweets);
                 }
@@ -79,7 +76,6 @@ public class MentionsTimelineFragment extends TweetsListFragment {
                 Log.d("TwitterClient", throwable.getMessage());
                 throwable.printStackTrace();
                 if (!isConnected) {
-                    Toast.makeText(getContext(), "No internet, loading from server", Toast.LENGTH_LONG).show();
                     List<Tweet> tweets = SQLite.select().from(Tweet.class).where(Tweet_Table.location.is("mentions")).queryList();
                     addItems(tweets);
                 }

@@ -122,12 +122,12 @@ public class ComposeActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        Log.d("TwitterClient", errorResponse.toString());
+                        Log.d("TwitterClient", throwable.getMessage());
                         throwable.printStackTrace();            }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                        Log.d("TwitterClient", errorResponse.toString());
+                        Log.d("TwitterClient", throwable.getMessage());
                         throwable.printStackTrace();            }
                 });
             }
